@@ -4,7 +4,7 @@ package context.support;
 import beans.factory.support.DefaultBeanFactory;
 import beans.factory.xml.XmlBeanDefinitionReader;
 import context.ApplicationContext;
-import io.Resource;
+import core.io.Resource;
 import util.ClassUtils;
 
 public abstract class AbstractApplicationContext implements ApplicationContext {

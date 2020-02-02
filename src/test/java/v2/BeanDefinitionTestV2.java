@@ -5,7 +5,7 @@ import beans.PropertyValue;
 import beans.factory.config.RuntimeBeanReference;
 import beans.factory.support.DefaultBeanFactory;
 import beans.factory.xml.XmlBeanDefinitionReader;
-import io.ClassPathResource;
+import core.io.ClassPathResource;
 import org.junit.Assert;
 import org.junit.Test;
 

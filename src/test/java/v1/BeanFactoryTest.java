@@ -5,7 +5,7 @@ import beans.factory.BeanCreationException;
 import beans.factory.BeanDefinitionStoreException;
 import beans.factory.support.DefaultBeanFactory;
 import beans.factory.xml.XmlBeanDefinitionReader;
-import io.ClassPathResource;
+import core.io.ClassPathResource;
 import org.junit.Before;
 import v1.entity.PetStoreService;
 import org.junit.Assert;

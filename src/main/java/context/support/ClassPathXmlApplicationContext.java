@@ -1,10 +1,7 @@
 package context.support;
 
-import beans.factory.support.DefaultBeanFactory;
-import beans.factory.xml.XmlBeanDefinitionReader;
-import context.ApplicationContext;
-import io.ClassPathResource;
-import io.Resource;
+import core.io.ClassPathResource;
+import core.io.Resource;
 public class ClassPathXmlApplicationContext extends AbstractApplicationContext {
 
     public ClassPathXmlApplicationContext(String configFile) {

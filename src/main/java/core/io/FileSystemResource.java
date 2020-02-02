@@ -1,4 +1,4 @@
-package io;
+package core.io;
 
 
 
@@ -21,7 +21,12 @@ public class FileSystemResource implements Resource {
 		this.file = new File(path);
 		this.path = path;
 	}
-	
+
+	public FileSystemResource(File file) {
+		this.file = file;
+		this.path = file.getPath();
+	}
+
 	public InputStream getInputStream() throws IOException {
 		return new FileInputStream(this.file);
 	}

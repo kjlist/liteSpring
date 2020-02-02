@@ -2,7 +2,6 @@ package v1;
 
 import context.ApplicationContext;
 import context.support.ClassPathXmlApplicationContext;
-import io.ClassPathResource;
 import org.junit.Assert;
 import org.junit.Test;
 import v1.entity.PetStoreService;

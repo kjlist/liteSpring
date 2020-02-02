@@ -1,8 +1,7 @@
 package v1;
 
-import io.ClassPathResource;
-import io.FileSystemResource;
-import io.Resource;
+import core.io.ClassPathResource;
+import core.io.Resource;
 import org.junit.Assert;
 import org.junit.Test;
 

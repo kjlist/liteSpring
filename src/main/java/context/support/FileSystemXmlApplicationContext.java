@@ -1,8 +1,8 @@
 package context.support;
 
 
-import io.FileSystemResource;
-import io.Resource;
+import core.io.FileSystemResource;
+import core.io.Resource;
 
 public class FileSystemXmlApplicationContext extends AbstractApplicationContext {
 

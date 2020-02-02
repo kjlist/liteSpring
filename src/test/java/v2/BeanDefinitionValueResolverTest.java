@@ -5,7 +5,7 @@ import beans.factory.config.TypedStringValue;
 import beans.factory.support.BeanDefinitionValueResolver;
 import beans.factory.support.DefaultBeanFactory;
 import beans.factory.xml.XmlBeanDefinitionReader;
-import io.ClassPathResource;
+import core.io.ClassPathResource;
 import org.junit.Assert;
 import org.junit.Test;
 import v2.entity.AccountDao;
