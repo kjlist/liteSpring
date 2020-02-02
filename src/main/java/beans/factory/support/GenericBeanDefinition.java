@@ -2,6 +2,7 @@ package beans.factory.support;
 
 
 import beans.BeanDefinition;
+import beans.ConstructorArgument;
 import beans.PropertyValue;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ public class GenericBeanDefinition implements BeanDefinition {
 	private boolean singleton = true;
 	private boolean prototype = false;
 	private String scope = SCOPE_DEFAULT;
+	private ConstructorArgument constructorArgument = new ConstructorArgument();
 	List<PropertyValue> propertyValues = new ArrayList<PropertyValue>();
 	public GenericBeanDefinition(String id, String beanClassName) {
 		this.id = id;
@@ -41,5 +43,17 @@ public class GenericBeanDefinition implements BeanDefinition {
 
 	public List<PropertyValue> getPropertyValues() {
 		return this.propertyValues;
+	}
+
+	public ConstructorArgument getConstructorArgument() {
+		return this.constructorArgument;
+	}
+
+	public String getID() {
+		return this.id;
+	}
+
+	public boolean hasConstructorArgumentValues() {
+		return !this.constructorArgument.isEmpty();
 	}
 }
