@@ -6,7 +6,10 @@ import beans.SimpleTypeConverter;
 import beans.factory.BeanCreationException;
 import beans.factory.BeanDefinitionStoreException;
 import beans.factory.BeanFactory;
+import beans.factory.config.BeanPostProcessor;
 import beans.factory.config.ConfigurableBeanFactory;
+import beans.factory.config.DependencyDescriptor;
+import beans.factory.config.InstantiationAwareBeanPostProcessor;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -18,6 +21,7 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -29,12 +33,21 @@ public class DefaultBeanFactory
         BeanDefinitionRegistry,
         ConfigurableBeanFactory {
 
+    private List<BeanPostProcessor> beanPostProcessors = new ArrayList<BeanPostProcessor>();
+
     private final Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<String, BeanDefinition>(64);
 
     private ClassLoader beanClassLoader;
 
     public DefaultBeanFactory() {
 
+    }
+
+    public void addBeanPostProcessor(BeanPostProcessor postProcessor){
+        this.beanPostProcessors.add(postProcessor);
+    }
+    public List<BeanPostProcessor> getBeanPostProcessors() {
+        return this.beanPostProcessors;
     }
     public BeanDefinition getBeanDefinition(String beanId) {
         return this.beanDefinitionMap.get(beanId);
@@ -101,6 +114,13 @@ public class DefaultBeanFactory
         }
     }
     protected void populateBean(BeanDefinition bd, Object bean){
+
+        for(BeanPostProcessor processor : this.getBeanPostProcessors()){
+            if(processor instanceof InstantiationAwareBeanPostProcessor){
+                ((InstantiationAwareBeanPostProcessor)processor).postProcessPropertyValues(bean, bd.getID());
+            }
+        }
+
         List<PropertyValue> pvs = bd.getPropertyValues();
 
         if (pvs == null || pvs.isEmpty()) {
@@ -110,15 +130,13 @@ public class DefaultBeanFactory
         BeanDefinitionValueResolver valueResolver = new BeanDefinitionValueResolver(this);
         SimpleTypeConverter converter = new SimpleTypeConverter();
         try{
-
-            BeanInfo beanInfo = Introspector.getBeanInfo(bean.getClass());
-            PropertyDescriptor[] pds = beanInfo.getPropertyDescriptors();
-
             for (PropertyValue pv : pvs){
                 String propertyName = pv.getName();
                 Object originalValue = pv.getValue();
                 Object resolvedValue = valueResolver.resolveValueIfNecessary(originalValue);
 
+                BeanInfo beanInfo = Introspector.getBeanInfo(bean.getClass());
+                PropertyDescriptor[] pds = beanInfo.getPropertyDescriptors();
                 for (PropertyDescriptor pd : pds) {
                     if(pd.getName().equals(propertyName)){
                         Object convertedValue = converter.convertIfNecessary(resolvedValue, pd.getPropertyType());
@@ -133,11 +151,40 @@ public class DefaultBeanFactory
             throw new BeanCreationException("Failed to obtain BeanInfo for class [" + bd.getBeanClassName() + "]", ex);
         }
     }
+
+
     public void setBeanClassLoader(ClassLoader beanClassLoader) {
         this.beanClassLoader = beanClassLoader;
     }
 
     public ClassLoader getBeanClassLoader() {
         return (this.beanClassLoader != null ? this.beanClassLoader : ClassUtils.getDefaultClassLoader());
+    }
+
+
+    public void resolveBeanClass(BeanDefinition bd) {
+        if(bd.hasBeanClass()){
+            return;
+        } else{
+            try {
+                bd.resolveBeanClass(this.getBeanClassLoader());
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException("can't load class:"+bd.getBeanClassName());
+            }
+        }
+    }
+
+    public Object resolveDependency(DependencyDescriptor descriptor) {
+
+        Class<?> typeToMatch = descriptor.getDependencyType();
+        for(BeanDefinition bd: this.beanDefinitionMap.values()){
+            //确保BeanDefinition 有Class对象
+            resolveBeanClass(bd);
+            Class<?> beanClass = bd.getBeanClass();
+            if(typeToMatch.isAssignableFrom(beanClass)){
+                return this.getBean(bd.getID());
+            }
+        }
+        return null;
     }
 }

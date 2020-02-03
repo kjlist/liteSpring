@@ -1,6 +1,8 @@
 package context.support;
 
 
+import beans.factory.annotation.AutowiredAnnotationProcessor;
+import beans.factory.config.ConfigurableBeanFactory;
 import beans.factory.support.DefaultBeanFactory;
 import beans.factory.xml.XmlBeanDefinitionReader;
 import context.ApplicationContext;
@@ -18,6 +20,8 @@ public abstract class AbstractApplicationContext implements ApplicationContext {
 		Resource resource = this.getResourceByPath(configFile);
 		reader.loadBeanDefinitions(resource);
 		factory.setBeanClassLoader(this.getBeanClassLoader());
+		registerBeanPostProcessors(factory);
+
 	}
 	
 	public Object getBean(String beanID) {
@@ -34,5 +38,11 @@ public abstract class AbstractApplicationContext implements ApplicationContext {
     public ClassLoader getBeanClassLoader() {
 		return (this.beanClassLoader != null ? this.beanClassLoader : ClassUtils.getDefaultClassLoader());
 	}
+	protected void registerBeanPostProcessors(ConfigurableBeanFactory beanFactory) {
 
+		AutowiredAnnotationProcessor postProcessor = new AutowiredAnnotationProcessor();
+		postProcessor.setBeanFactory(beanFactory);
+		beanFactory.addBeanPostProcessor(postProcessor);
+
+	}
 }
