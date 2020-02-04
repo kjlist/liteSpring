@@ -6,6 +6,7 @@ import beans.SimpleTypeConverter;
 import beans.factory.BeanCreationException;
 import beans.factory.BeanDefinitionStoreException;
 import beans.factory.BeanFactory;
+import beans.factory.NoSuchBeanDefinitionException;
 import beans.factory.config.BeanPostProcessor;
 import beans.factory.config.ConfigurableBeanFactory;
 import beans.factory.config.DependencyDescriptor;
@@ -89,6 +90,16 @@ public class DefaultBeanFactory
         }
         return createBean(bd);
     }
+
+    public Class<?> getType(String name) throws NoSuchBeanDefinitionException {
+        BeanDefinition bd = this.getBeanDefinition(name);
+        if(bd == null){
+            throw new NoSuchBeanDefinitionException(name);
+        }
+        resolveBeanClass(bd);
+        return bd.getBeanClass();
+    }
+
     private Object createBean(BeanDefinition bd) {
         //创建实例
         Object bean = instantiateBean(bd);

@@ -1,6 +1,7 @@
 package context.support;
 
 
+import beans.factory.NoSuchBeanDefinitionException;
 import beans.factory.annotation.AutowiredAnnotationProcessor;
 import beans.factory.config.ConfigurableBeanFactory;
 import beans.factory.support.DefaultBeanFactory;
@@ -10,6 +11,9 @@ import core.io.Resource;
 import util.ClassUtils;
 
 public abstract class AbstractApplicationContext implements ApplicationContext {
+	public Class<?> getType(String name) throws NoSuchBeanDefinitionException{
+		return this.factory.getType(name);
+	}
 
 	private DefaultBeanFactory factory = null;
 	private ClassLoader beanClassLoader;
