@@ -5,10 +5,11 @@ import beans.factory.config.RuntimeBeanReference;
 import beans.factory.config.TypedStringValue;
 
 public class BeanDefinitionValueResolver {
-    private final BeanFactory beanFactory;
+    private final AbstractBeanFactory beanFactory;
+
 
     public BeanDefinitionValueResolver(
-            BeanFactory beanFactory) {
+            AbstractBeanFactory beanFactory) {
 
         this.beanFactory = beanFactory;
     }

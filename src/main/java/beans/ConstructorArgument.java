@@ -6,7 +6,6 @@ import java.util.List;
 
 public class ConstructorArgument {
 
-	
 	private final List<ValueHolder> argumentValues = new LinkedList<ValueHolder>();
 
 
@@ -17,12 +16,14 @@ public class ConstructorArgument {
 	}
 
 
-	
+	public void addArgumentValue(Object value) {
+		this.argumentValues.add(new ValueHolder(value));
+	}
 
 	public void addArgumentValue(ValueHolder valueHolder) {
 		this.argumentValues.add(valueHolder);
 	}
-	
+
 	public List<ValueHolder> getArgumentValues() {
 		return Collections.unmodifiableList(this.argumentValues);
 	}
@@ -68,29 +69,29 @@ public class ConstructorArgument {
 			this.type = type;
 		}
 
-		
+
 		public ValueHolder(Object value, String type, String name) {
 			this.value = value;
 			this.type = type;
 			this.name = name;
 		}
 
-		
+
 		public void setValue(Object value) {
 			this.value = value;
 		}
 
-		
+
 		public Object getValue() {
 			return this.value;
 		}
 
-		
+
 		public void setType(String type) {
 			this.type = type;
 		}
 
-		
+
 		public String getType() {
 			return this.type;
 		}
@@ -99,10 +100,9 @@ public class ConstructorArgument {
 			this.name = name;
 		}
 
-	
+
 		public String getName() {
 			return this.name;
 		}
 	}
-
 }

@@ -11,62 +11,41 @@ import java.util.List;
 public class GenericBeanDefinition implements BeanDefinition {
 	private String id;
 	private String beanClassName;
+	private Class<?> beanClass;
 	private boolean singleton = true;
 	private boolean prototype = false;
 	private String scope = SCOPE_DEFAULT;
-	private Class<?> beanClass;
-	private ConstructorArgument constructorArgument = new ConstructorArgument();
+
 	List<PropertyValue> propertyValues = new ArrayList<PropertyValue>();
+	private ConstructorArgument constructorArgument = new ConstructorArgument();
+	//表明这个Bean定义是不是我们litespring自己合成的。
+	private boolean isSynthetic = false;
+
 	public GenericBeanDefinition(String id, String beanClassName) {
+
 		this.id = id;
 		this.beanClassName = beanClassName;
+	}
+	public GenericBeanDefinition(Class<?> clz) {
+		this.beanClass = clz;
+		this.beanClassName = clz.getName();
 	}
 	public GenericBeanDefinition() {
 
 	}
-	public boolean isSingleton() {
-		return this.singleton;
+	public boolean isSynthetic() {
+		return isSynthetic;
 	}
-	public boolean isPrototype() {
-		return this.prototype;
+	public void setSynthetic(boolean isSynthetic) {
+		this.isSynthetic = isSynthetic;
 	}
-	public String getScope() {
-		return this.scope;
-	}
-	public void setScope(String scope) {
-		this.scope = scope;
-		this.singleton = SCOPE_SINGLETON.equals(scope) || SCOPE_DEFAULT.equals(scope);
-		this.prototype = SCOPE_PROTOTYPE.equals(scope);
+	public String getBeanClassName() {
 
+		return this.beanClassName;
 	}
-
 	public void setBeanClassName(String className){
 		this.beanClassName = className;
 	}
-
-	public String getBeanClassName() {
-		return this.beanClassName;
-	}
-
-	public List<PropertyValue> getPropertyValues() {
-		return this.propertyValues;
-	}
-
-	public ConstructorArgument getConstructorArgument() {
-		return this.constructorArgument;
-	}
-
-	public String getID() {
-		return this.id;
-	}
-	public void setId(String id){
-		this.id = id;
-	}
-
-	public boolean hasConstructorArgumentValues() {
-		return !this.constructorArgument.isEmpty();
-	}
-
 	public Class<?> resolveBeanClass(ClassLoader classLoader) throws ClassNotFoundException{
 		String className = getBeanClassName();
 		if (className == null) {
@@ -85,5 +64,35 @@ public class GenericBeanDefinition implements BeanDefinition {
 	}
 	public boolean hasBeanClass(){
 		return this.beanClass != null;
+	}
+	public boolean isSingleton() {
+		return this.singleton;
+	}
+	public boolean isPrototype() {
+		return this.prototype;
+	}
+	public String getScope() {
+		return this.scope;
+	}
+	public void setScope(String scope) {
+		this.scope = scope;
+		this.singleton = SCOPE_SINGLETON.equals(scope) || SCOPE_DEFAULT.equals(scope);
+		this.prototype = SCOPE_PROTOTYPE.equals(scope);
+
+	}
+	public List<PropertyValue> getPropertyValues(){
+		return this.propertyValues;
+	}
+	public ConstructorArgument getConstructorArgument() {
+		return this.constructorArgument;
+	}
+	public String getID() {
+		return this.id;
+	}
+	public void setId(String id){
+		this.id = id;
+	}
+	public boolean hasConstructorArgumentValues() {
+		return !this.constructorArgument.isEmpty();
 	}
 }
